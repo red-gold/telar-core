@@ -2,9 +2,11 @@ package server
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/julienschmidt/httprouter"
 	cf "github.com/red-gold/telar-core/config"
+	"github.com/red-gold/telar-core/utils"
 )
 
 type ServerRouter struct {
@@ -100,9 +102,13 @@ func (r *ServerRouter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	config := cf.AppConfig
 	w.Header().Add("Access-Control-Allow-Credentials", "true")
 	w.Header().Add("Content-Type", "application/json")
-	// if origin := req.Header.Get("Origin"); origin != "" {
-	w.Header().Set("Access-Control-Allow-Origin", *config.Origin)
-	// }
+	if origin := req.Header.Get("Origin"); origin != "" {
+		originList := strings.Split(*config.Origin, ",")
+		_, exist := utils.Find(originList, origin)
+		if exist == true {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+		}
+	}
 	w.Header().Set("Access-Control-Allow-Headers", "'X-Requested-With, X-HTTP-Method-Override, Accept, Content-Type,access-control-allow-origin, access-control-allow-headers")
 	r.router.ServeHTTP(w, req)
 }
