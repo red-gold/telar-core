@@ -15,6 +15,7 @@ require (
 	github.com/openfaas-incubator/go-function-sdk v0.0.0-20200405082418-b31e65bf8a33
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/plivo/plivo-go v5.5.1+incompatible
+	github.com/rs/cors v1.7.0
 	github.com/sirupsen/logrus v1.8.0 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/tidwall/pretty v1.1.0 // indirect

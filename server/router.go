@@ -1,12 +1,13 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/julienschmidt/httprouter"
 	cf "github.com/red-gold/telar-core/config"
-	"github.com/red-gold/telar-core/utils"
+	"github.com/rs/cors"
 )
 
 type ServerRouter struct {
@@ -100,15 +101,16 @@ func (r *ServerRouter) POSTFILE(path string, handle HandleWR, protected RoutePro
 // ServeHTTP makes the router implement the http.Handler interface.
 func (r *ServerRouter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	config := cf.AppConfig
-	w.Header().Add("Access-Control-Allow-Credentials", "true")
 	w.Header().Add("Content-Type", "application/json")
-	if origin := req.Header.Get("Origin"); origin != "" {
-		originList := strings.Split(*config.Origin, ",")
-		_, exist := utils.Find(originList, origin)
-		if exist == true {
-			w.Header().Set("Access-Control-Allow-Origin", origin)
-		}
-	}
+	fmt.Println("[INFO] Origins ", strings.Split(*config.Origin, ","))
 	w.Header().Set("Access-Control-Allow-Headers", "'X-Requested-With, X-HTTP-Method-Override, Accept, Content-Type,access-control-allow-origin, access-control-allow-headers")
+	c := cors.New(cors.Options{
+		AllowedOrigins:   strings.Split(*config.Origin, ","),
+		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
+		// Enable Debugging for testing, consider disabling in production
+		Debug: false,
+	})
+	c.HandlerFunc(w, req)
 	r.router.ServeHTTP(w, req)
 }

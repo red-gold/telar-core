@@ -8,3 +8,4 @@ playground/functions/*
 playground/storage/serviceAccountKey.json
 playground/storage/public/node_modules
 playground/storage/public/node_modules/*
+.DS_Store
