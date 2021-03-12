@@ -5,6 +5,7 @@ type (
 		BaseRoute           *string
 		Server              *string
 		Gateway             *string
+		InternalGateway     *string
 		MongoDBHost         *string
 		Database            *string
 		PayloadSecret       *string
