@@ -20,8 +20,6 @@ var dbName *string
 // Create a new mogodb client object
 func NewMongoClient(ctx context.Context, mongoDBHost string, database string) (MongoDatabase, error) {
 	mongoClient := &MongoClient{Context: ctx}
-
-	fmt.Printf("Mongo URL: %s", mongoDBHost)
 	var err error
 	client, err = mongo.Connect(ctx, options.Client().ApplyURI(mongoDBHost))
 	dbName = &database

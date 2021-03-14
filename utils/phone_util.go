@@ -1,9 +1,8 @@
 package utils
 
 import (
-	"fmt"
-
 	"github.com/plivo/plivo-go"
+	"github.com/red-gold/telar-core/pkg/log"
 )
 
 type PhoneClient struct {
@@ -13,18 +12,18 @@ type PhoneClient struct {
 
 // NewPhone initialize phone config
 func NewPhone(authId string, authToken string, sourceNumber string) (*PhoneClient, error) {
-	fmt.Println("Start Phone client initializing...")
+	log.Info("Start Phone client initializing...")
 	client, err := plivo.NewClient(authId, authToken, &plivo.ClientOptions{})
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Phone client initialized.")
+	log.Info("Phone client initialized.")
 	return &PhoneClient{client: client, sourceNumber: sourceNumber}, nil
 }
 
 // SendSms send sms
 func (pc *PhoneClient) SendSms(phoneNumber string, message string) ([]string, error) {
-	fmt.Println("Start sending message...")
+	log.Info("Start sending message...")
 
 	req := plivo.MessageCreateParams{
 		Src:  pc.sourceNumber,

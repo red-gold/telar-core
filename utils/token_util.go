@@ -45,7 +45,6 @@ func ValidateToken(keydata []byte, token string) (jwt.MapClaims, error) {
 	}
 
 	if claims, ok := parsed.Claims.(jwt.MapClaims); ok && parsed.Valid {
-		log.Printf("Claims JWT: %v", claims)
 		return claims, nil
 	} else {
 		return nil, fmt.Errorf("Token claim is not valid!")

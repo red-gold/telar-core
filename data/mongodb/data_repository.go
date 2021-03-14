@@ -2,9 +2,9 @@ package mongodb
 
 import (
 	"context"
-	"fmt"
 
 	d "github.com/red-gold/telar-core/data"
+	"github.com/red-gold/telar-core/pkg/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/mgo.v2/bson"
@@ -44,13 +44,13 @@ func (m *DataRepositoryMongo) CreateIndex(collectionName string, indexes map[str
 
 		collection, err = m.Client.GetCollection(collectionName)
 		if err != nil {
-			fmt.Printf("Get collection %s err (%s)! \n", collectionName, err.Error())
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
 			result <- err
 		}
 
 		ctx, err = m.Client.GetContext()
 		if err != nil {
-			fmt.Printf("Get context err (%s)! \n", err.Error())
+			log.Error("Get context err (%s)! \n", err.Error())
 			result <- err
 		}
 
@@ -84,13 +84,13 @@ func (m *DataRepositoryMongo) Save(collectionName string, data interface{}) <-ch
 
 		collection, err = m.Client.GetCollection(collectionName)
 		if err != nil {
-			fmt.Printf("Get collection %s err (%s)! \n", collectionName, err.Error())
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
 		ctx, err = m.Client.GetContext()
 		if err != nil {
-			fmt.Printf("Get context err (%s)! \n", err.Error())
+			log.Error("Get context err (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
@@ -115,13 +115,13 @@ func (m *DataRepositoryMongo) SaveMany(collectionName string, data []interface{}
 
 		collection, err = m.Client.GetCollection(collectionName)
 		if err != nil {
-			fmt.Printf("Get collection %s err (%s)! \n", collectionName, err.Error())
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
 		ctx, err = m.Client.GetContext()
 		if err != nil {
-			fmt.Printf("Get context err (%s)! \n", err.Error())
+			log.Error("Get context err (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 		insertOption := &options.InsertManyOptions{}
@@ -148,13 +148,13 @@ func (m *DataRepositoryMongo) Find(collectionName string, filter interface{}, li
 
 		collection, err = m.Client.GetCollection(collectionName)
 		if err != nil {
-			fmt.Printf("Get collection %s err (%s)! \n", collectionName, err.Error())
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
 			result <- &DataResult{err: err}
 		}
 
 		ctx, err = m.Client.GetContext()
 		if err != nil {
-			fmt.Printf("Get context err (%s)! \n", err.Error())
+			log.Error("Get context err (%s)! \n", err.Error())
 			result <- &DataResult{err: err}
 		}
 		findOptions := options.Find()
@@ -171,7 +171,7 @@ func (m *DataRepositoryMongo) Find(collectionName string, filter interface{}, li
 		// Execute query
 		cur, err = collection.Find(ctx, filter, findOptions)
 		if err != nil {
-			fmt.Printf("Find cursor err (%s)! \n", err.Error())
+			log.Error("Find cursor err (%s)! \n", err.Error())
 			result <- &DataResult{err: err}
 		}
 
@@ -196,13 +196,13 @@ func (m *DataRepositoryMongo) FindOne(collectionName string, filter interface{})
 
 		collection, err = m.Client.GetCollection(collectionName)
 		if err != nil {
-			fmt.Printf("Get collection %s err (%s)! \n", collectionName, err.Error())
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
 			result <- &DataSingleResult{err: err}
 		}
 
 		ctx, err = m.Client.GetContext()
 		if err != nil {
-			fmt.Printf("Get context err (%s)! \n", err.Error())
+			log.Error("Get context err (%s)! \n", err.Error())
 			result <- &DataSingleResult{err: err}
 		}
 
@@ -211,7 +211,7 @@ func (m *DataRepositoryMongo) FindOne(collectionName string, filter interface{})
 		err = findResult.Err()
 		if err != nil {
 
-			fmt.Printf("Find result error (%s)! \n", err.Error())
+			log.Error("Find result error (%s)! \n", err.Error())
 			result <- &DataSingleResult{err: err}
 		}
 		result <- &DataSingleResult{result: findResult}
@@ -235,14 +235,14 @@ func (m *DataRepositoryMongo) Update(collectionName string, filter interface{}, 
 		// Get Collection
 		collection, err = m.Client.GetCollection(collectionName)
 		if err != nil {
-			fmt.Printf("Get collection %s err (%s)! \n", collectionName, err.Error())
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
 		// Get Context
 		ctx, err = m.Client.GetContext()
 		if err != nil {
-			fmt.Printf("Get context err (%s)! \n", err.Error())
+			log.Error("Get context err (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
@@ -266,7 +266,7 @@ func (m *DataRepositoryMongo) Update(collectionName string, filter interface{}, 
 		// Execute update
 		updateResult, err = collection.UpdateOne(ctx, filter, data, updateOptions)
 		if err != nil {
-			fmt.Printf("Update error (%s)! \n", err.Error())
+			log.Error("Update error (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
@@ -292,14 +292,14 @@ func (m *DataRepositoryMongo) UpdateMany(collectionName string, filter interface
 		// Get Collection
 		collection, err = m.Client.GetCollection(collectionName)
 		if err != nil {
-			fmt.Printf("Get collection %s err (%s)! \n", collectionName, err.Error())
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
 		// Get Context
 		ctx, err = m.Client.GetContext()
 		if err != nil {
-			fmt.Printf("Get context err (%s)! \n", err.Error())
+			log.Error("Get context err (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
@@ -323,7 +323,7 @@ func (m *DataRepositoryMongo) UpdateMany(collectionName string, filter interface
 		// Execute update
 		updateResult, err = collection.UpdateMany(ctx, filter, data, updateOptions)
 		if err != nil {
-			fmt.Printf("Update error (%s)! \n", err.Error())
+			log.Error("Update error (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
@@ -348,12 +348,12 @@ func (m *DataRepositoryMongo) BulkUpdateOne(collectionName string, bulkData []d.
 		)
 		collection, err = m.Client.GetCollection(collectionName)
 		if err != nil {
-			fmt.Printf("Get collection %s err (%s)! \n", collectionName, err.Error())
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 		ctx, err = m.Client.GetContext()
 		if err != nil {
-			fmt.Printf("Get context err (%s)! \n", err.Error())
+			log.Error("Get context err (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 		bulkOptions := &options.BulkWriteOptions{}
@@ -369,7 +369,7 @@ func (m *DataRepositoryMongo) BulkUpdateOne(collectionName string, bulkData []d.
 		// Execute bulk update model
 		updateResult, err = collection.BulkWrite(ctx, mongoModels, bulkOptions)
 		if err != nil {
-			fmt.Printf("Bulk Update error (%s)! \n", err.Error())
+			log.Error("Bulk Update error (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
@@ -393,13 +393,13 @@ func (m *DataRepositoryMongo) Delete(collectionName string, filter interface{}, 
 		)
 		collection, err = m.Client.GetCollection(collectionName)
 		if err != nil {
-			fmt.Printf("Get collection %s err (%s)! \n", collectionName, err.Error())
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
 		ctx, err = m.Client.GetContext()
 		if err != nil {
-			fmt.Printf("Get context err (%s)! \n", err.Error())
+			log.Error("Get context err (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
@@ -410,7 +410,7 @@ func (m *DataRepositoryMongo) Delete(collectionName string, filter interface{}, 
 			deleteResult, err = collection.DeleteMany(ctx, filter)
 		}
 		if err != nil {
-			fmt.Printf("Delete error (%s)! \n", err.Error())
+			log.Error("Delete error (%s)! \n", err.Error())
 			result <- d.RepositoryResult{Error: err}
 		}
 
@@ -466,7 +466,7 @@ func (sr *DataResult) Close() {
 func (sr *DataResult) Decode(v interface{}) error {
 	err := sr.result.Decode(v)
 	if err != nil {
-		fmt.Printf("Decode err (%s)! \n", err.Error())
+		log.Error("Decode err (%s)! \n", err.Error())
 	}
 	return err
 }

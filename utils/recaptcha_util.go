@@ -11,10 +11,11 @@ package utils
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/red-gold/telar-core/pkg/log"
 )
 
 type RecaptchaResponse struct {
@@ -40,18 +41,18 @@ func check(remoteip, response string, secretKey string) (r RecaptchaResponse, er
 	resp, err := http.PostForm(recaptchaServerName,
 		url.Values{"secret": {secretKey}, "remoteip": {remoteip}, "response": {response}})
 	if err != nil {
-		log.Printf("Post error: %s\n", err)
+		log.Error("Post error: %s\n", err)
 		return
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf("Read error: could not read body: %s \n", err)
+		log.Error("Read error: could not read body: %s \n", err)
 		return
 	}
 	err = json.Unmarshal(body, &r)
 	if err != nil {
-		log.Printf("Read error: got invalid JSON: %s \n", err)
+		log.Error("Read error: got invalid JSON: %s \n", err)
 		return
 	}
 	return
@@ -81,7 +82,7 @@ func (recap *Recaptcha) VerifyCaptch(recaptchaResponse string, remoteIpAddress s
 
 	result, err := confirm(remoteIpAddress, recaptchaResponse, recap.secret)
 	if err != nil {
-		log.Println("recaptcha server error", err)
+		log.Error("recaptcha server error", err)
 	}
 	return result, err
 

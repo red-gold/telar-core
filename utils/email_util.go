@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"net"
 	"net/smtp"
+
+	"github.com/red-gold/telar-core/pkg/log"
 )
 
 var auth smtp.Auth
@@ -25,8 +28,8 @@ type Request struct {
 }
 
 func (email *Email) initEmail() {
-	// SMTP "smtp.gmail.com"
-	auth = smtp.PlainAuth("", email.refEmail, email.password, email.smtpEmail)
+	host, _, _ := net.SplitHostPort(email.smtpEmail)
+	auth = smtp.PlainAuth("", email.refEmail, email.password, host)
 }
 
 func NewEmail(refEmail string, password string, smtpEmail string) *Email {
@@ -46,10 +49,10 @@ func NewEmailRequest(to []string, subject, body string) *Request {
 }
 
 func (email *Email) SendEmail(req *Request, tmplPath string, data interface{}) (bool, error) {
-	fmt.Println("Initial email...")
+	log.Info("Initial email...")
 	email.initEmail()
 
-	fmt.Println("Start parsing html template...")
+	log.Info("Start parsing html template...")
 	err := req.parseTemplate(tmplPath, data)
 	if err != nil {
 		return false, fmt.Errorf("Error in parsing html template: %s", err.Error())
@@ -57,14 +60,13 @@ func (email *Email) SendEmail(req *Request, tmplPath string, data interface{}) (
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	subject := "Subject: " + req.subject + "!\n"
 	msg := []byte(subject + mime + "\n" + req.body)
-	addr := "smtp.gmail.com:587"
 
-	fmt.Printf("\n********************\nStart sending email from %s to %s...\n********************\n", email.refEmail, req.to)
-	errEmail := smtp.SendMail(addr, auth, email.refEmail, req.to, msg)
+	log.Info("Start sending email from %s to %s...", email.refEmail, req.to)
+	errEmail := smtp.SendMail(email.smtpEmail, auth, email.refEmail, req.to, msg)
 	if errEmail != nil {
 		return false, fmt.Errorf("Error sending email: %s", errEmail.Error())
 	}
-	fmt.Printf("\n********************\nEmail sent from %s to %s...\n********************\n", email.refEmail, req.to)
+	log.Info("Email sent from %s to %s...", email.refEmail, req.to)
 	return true, nil
 }
 
@@ -78,6 +80,7 @@ func (r *Request) parseTemplate(templateFileName string, data interface{}) error
 		return err
 	}
 	r.body = buf.String()
-	fmt.Printf("HTML parsed %s   __---__   data: %v", r.body, data)
+	log.Info("HTML parsed data ", data)
+	log.Info("HTML parsed body", r.body)
 	return nil
 }

@@ -1,9 +1,10 @@
 package utils
 
 import (
-	"fmt"
 	"strconv"
 	"time"
+
+	"github.com/red-gold/telar-core/pkg/log"
 )
 
 // MomentToTime Covert moment unix to time.Time
@@ -34,7 +35,7 @@ func UTCUnixToTime(timestamp int64) time.Time {
 func IsTimeExpired(timestamp int64, offsetInSeconds float64) bool {
 	tt := UTCUnixToTime(timestamp)
 	remainder := tt.Sub(time.Now())
-	fmt.Printf("remainder: %v calc : %v", remainder, (remainder.Seconds() + offsetInSeconds))
+	log.Info("remainder: %v calc : %v", remainder, (remainder.Seconds() + offsetInSeconds))
 
 	return !((remainder.Seconds() + offsetInSeconds) > 0)
 }
@@ -42,7 +43,7 @@ func IsTimeExpired(timestamp int64, offsetInSeconds float64) bool {
 // IsTimeExpired check time expiration in golang time
 func IsTimeExpiredInTime(tt time.Time, offsetInSeconds float64) bool {
 	remainder := tt.Sub(time.Now())
-	fmt.Printf("remainder: %v calc : %v", remainder, (remainder.Seconds() + offsetInSeconds))
+	log.Info("remainder: %v calc : %v", remainder, (remainder.Seconds() + offsetInSeconds))
 
 	return !((remainder.Seconds() + offsetInSeconds) > 0)
 }

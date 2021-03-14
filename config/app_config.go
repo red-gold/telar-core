@@ -29,6 +29,7 @@ type (
 		WebDomain           *string
 		DBType              *string
 		QueryPrettyURL      *bool
+		Debug               *bool
 	}
 )
 

@@ -109,7 +109,7 @@ func (r *ServerRouter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		AllowCredentials: true,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
 		// Enable Debugging for testing, consider disabling in production
-		Debug: false,
+		Debug: *config.Debug,
 	})
 	c.HandlerFunc(w, req)
 	r.router.ServeHTTP(w, req)

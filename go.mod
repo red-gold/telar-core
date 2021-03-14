@@ -5,7 +5,9 @@ go 1.16
 require (
 	github.com/DataDog/zstd v1.4.8 // indirect
 	github.com/alexellis/hmac v0.0.0-20180624211220-5c52ab81c0de
+	github.com/davecgh/go-spew v1.1.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fatih/color v1.10.0
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/golang/snappy v0.0.3 // indirect
@@ -18,6 +20,7 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/sirupsen/logrus v1.8.0 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
+	github.com/subosito/gotenv v1.2.0
 	github.com/tidwall/pretty v1.1.0 // indirect
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
