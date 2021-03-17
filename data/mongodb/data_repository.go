@@ -210,7 +210,10 @@ func (m *DataRepositoryMongo) FindOne(collectionName string, filter interface{})
 		findResult = collection.FindOne(ctx, filter)
 		err = findResult.Err()
 		if err != nil {
-
+			// ErrNoDocuments means that the filter did not match any documents in the collection
+			if err == mongo.ErrNoDocuments {
+				result <- &DataSingleResult{err: d.ErrNoDocuments}
+			}
 			log.Error("Find result error (%s)! \n", err.Error())
 			result <- &DataSingleResult{err: err}
 		}
