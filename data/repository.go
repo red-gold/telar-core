@@ -19,6 +19,7 @@ type ArrayFilters struct {
 type Repository interface {
 	Save(collectionName string, data interface{}) <-chan RepositoryResult
 	SaveMany(collectionName string, data []interface{}) <-chan RepositoryResult
+	Aggregate(collectionName string, pipeline interface{}) <-chan QueryResult
 	Find(collectionName string, filter interface{}, limit int64, skip int64, sort map[string]int) <-chan QueryResult
 	FindOne(collectionName string, filter interface{}) <-chan QuerySingleResult
 	Update(collectionName string, filter interface{}, data interface{}, opts ...*UpdateOptions) <-chan RepositoryResult

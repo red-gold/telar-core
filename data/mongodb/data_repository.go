@@ -135,6 +135,44 @@ func (m *DataRepositoryMongo) SaveMany(collectionName string, data []interface{}
 }
 
 // Find get list of object.
+func (m *DataRepositoryMongo) Aggregate(collectionName string, pipeline interface{}) <-chan d.QueryResult {
+	result := make(chan d.QueryResult)
+	go func() {
+
+		var (
+			err        error
+			collection *mongo.Collection
+			ctx        context.Context
+			cur        *mongo.Cursor
+		)
+
+		collection, err = m.Client.GetCollection(collectionName)
+		if err != nil {
+			log.Error("Get collection %s err (%s)! \n", collectionName, err.Error())
+			result <- &DataResult{err: err}
+		}
+
+		ctx, err = m.Client.GetContext()
+		if err != nil {
+			log.Error("Get context err (%s)! \n", err.Error())
+			result <- &DataResult{err: err}
+		}
+
+		// Execute query
+		cur, err = collection.Aggregate(ctx, pipeline)
+		if err != nil {
+			log.Error("Find cursor err (%s)! \n", err.Error())
+			result <- &DataResult{err: err}
+		}
+
+		result <- &DataResult{result: cur}
+		close(result)
+	}()
+
+	return result
+}
+
+// Find get list of object.
 func (m *DataRepositoryMongo) Find(collectionName string, filter interface{}, limit int64, skip int64, sort map[string]int) <-chan d.QueryResult {
 	result := make(chan d.QueryResult)
 	go func() {
