@@ -12,6 +12,7 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
+	github.com/gorilla/schema v1.2.0
 	github.com/klauspost/compress v1.12.3 // indirect
 	github.com/plivo/plivo-go v5.5.1+incompatible
 	github.com/sirupsen/logrus v1.8.0 // indirect
