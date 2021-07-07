@@ -40,6 +40,7 @@ func New(config Config) fiber.Handler {
 					UserID:      userUUID,
 					Username:    c.Get("email"),
 					Avatar:      c.Get("avatar"),
+					SocialName:  c.Get("socialName"),
 					DisplayName: c.Get("displayName"),
 					SystemRole:  c.Get("role"),
 				})
