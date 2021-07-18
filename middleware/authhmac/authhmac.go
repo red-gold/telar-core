@@ -1,6 +1,8 @@
 package authhmac
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofrs/uuid"
 	"github.com/red-gold/telar-core/pkg/log"
@@ -35,6 +37,14 @@ func New(config Config) fiber.Handler {
 				return c.Next()
 			}
 			userUUID, userUuidErr := uuid.FromString(c.Get("uid"))
+
+			var createdDate int64 = 0
+			if c.Get("createdDate") != "" {
+				createdDate, err = strconv.ParseInt(c.Get("createdDate"), 10, 64)
+				if err != nil {
+					panic(err)
+				}
+			}
 			if userUuidErr == nil {
 				c.Locals(cfg.UserCtxName, types.UserContext{
 					UserID:      userUUID,
@@ -44,7 +54,7 @@ func New(config Config) fiber.Handler {
 					Avatar:      c.Get("avatar"),
 					Banner:      c.Get("banner"),
 					TagLine:     c.Get("tagLine"),
-					CreatedDate: c.Get("createdDate"),
+					CreatedDate: createdDate,
 					SystemRole:  c.Get("role"),
 				})
 				return c.Next()
