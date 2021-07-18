@@ -13,4 +13,5 @@ type UserContext struct {
 	Banner      string    `json:"banner"`
 	TagLine     string    `json:"tagLine"`
 	SystemRole  string    `json:"role"`
+	CreatedDate string    `json:"createdDate"`
 }

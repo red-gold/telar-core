@@ -44,6 +44,7 @@ func New(config Config) fiber.Handler {
 					Avatar:      c.Get("avatar"),
 					Banner:      c.Get("banner"),
 					TagLine:     c.Get("tagLine"),
+					CreatedDate: c.Get("createdDate"),
 					SystemRole:  c.Get("role"),
 				})
 				return c.Next()
