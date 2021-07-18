@@ -39,9 +39,11 @@ func New(config Config) fiber.Handler {
 				c.Locals(cfg.UserCtxName, types.UserContext{
 					UserID:      userUUID,
 					Username:    c.Get("email"),
-					Avatar:      c.Get("avatar"),
 					SocialName:  c.Get("socialName"),
 					DisplayName: c.Get("displayName"),
+					Avatar:      c.Get("avatar"),
+					Banner:      c.Get("banner"),
+					TagLine:     c.Get("tagLine"),
 					SystemRole:  c.Get("role"),
 				})
 				return c.Next()
