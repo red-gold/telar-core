@@ -1,9 +1,7 @@
 package utils
 
 import (
-	"bytes"
 	"fmt"
-	"html/template"
 	"net"
 	"net/smtp"
 
@@ -52,11 +50,6 @@ func (email *Email) SendEmail(req *Request, tmplPath string, data interface{}) (
 	log.Info("Initial email...")
 	email.initEmail()
 
-	log.Info("Start parsing html template...")
-	err := req.parseTemplate(tmplPath, data)
-	if err != nil {
-		return false, fmt.Errorf("Error in parsing html template: %s", err.Error())
-	}
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	subject := "Subject: " + req.subject + "!\n"
 	msg := []byte(subject + mime + "\n" + req.body)
@@ -68,19 +61,4 @@ func (email *Email) SendEmail(req *Request, tmplPath string, data interface{}) (
 	}
 	log.Info("Email sent from %s to %s...", email.refEmail, req.to)
 	return true, nil
-}
-
-func (r *Request) parseTemplate(templateFileName string, data interface{}) error {
-	t, err := template.ParseFiles(templateFileName)
-	if err != nil {
-		return err
-	}
-	buf := new(bytes.Buffer)
-	if err = t.Execute(buf, data); err != nil {
-		return err
-	}
-	r.body = buf.String()
-	log.Info("HTML parsed data ", data)
-	log.Info("HTML parsed body", r.body)
-	return nil
 }
