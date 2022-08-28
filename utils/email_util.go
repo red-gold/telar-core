@@ -46,7 +46,7 @@ func NewEmailRequest(to []string, subject, body string) *Request {
 	}
 }
 
-func (email *Email) SendEmail(req *Request, tmplPath string, data interface{}) (bool, error) {
+func (email *Email) SendEmail(req *Request) (bool, error) {
 	log.Info("Initial email...")
 	email.initEmail()
 
