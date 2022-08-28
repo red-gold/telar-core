@@ -27,7 +27,11 @@ type Request struct {
 
 func (email *Email) initEmail() {
 	host, _, _ := net.SplitHostPort(email.smtpEmail)
-	auth = smtp.PlainAuth("", email.refEmail, email.password, host)
+	if email.password == "" {
+		auth = nil
+	} else {
+		auth = smtp.PlainAuth("", email.refEmail, email.password, host)
+	}
 }
 
 func NewEmail(refEmail string, password string, smtpEmail string) *Email {
